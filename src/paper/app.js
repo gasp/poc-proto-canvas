@@ -10,6 +10,10 @@ export default class PaperApp {
 
     this.scene = 'home'
 
+    // relative distance between start drag and element
+    this.xrel = 0
+
+
     this.init()
     this.draw()
   }
@@ -311,7 +315,7 @@ export default class PaperApp {
           const tit = new PointText(p)
           tit.style = {
             fontFamily: 'CircularStd',
-            fontWeight: 400,
+            fontWeight: 600,
             fontSize: 18,
             fillColor: 'red',
             justification: 'left',
@@ -364,7 +368,7 @@ export default class PaperApp {
       // berlin
       new Group([
         berThumb,
-        city(new Point(340, 450), 'Berlin DE', '1,500', 3, '$'),
+        city(new Point(340, 450), 'Berlin, DE', '1,500', 3, '$'),
       ])
 
     ])
@@ -454,11 +458,14 @@ export default class PaperApp {
   enlapsed() {} // timeline
 
   down(ev) {
-    if (this.scene === 'explore' && ev.y > 300 && ev.y < 450) {
+    if (this.scene === 'explore' && ev.y > 300 && ev.y < 570) {
       this.cursor.drag = true
       this.cursor.start = [ev.x, ev.y]
+      this.cursor.curr = [ev.x, ev.y]
       this.debugLine.segments[0].point = new Point(this.cursor.start)
       this.debugLine.strokeWidth = 3
+      console.log('cp', this.cities.position.x, ev.x, this.cities.position.x - ev.x)
+      this.xrel = this.cities.position.x - ev.x
     }
 
   }
@@ -476,6 +483,16 @@ export default class PaperApp {
         this.homeLayer.visible = false
         this.exploreLayer.visible = true
       // }
+    }
+
+    if (this.scene === 'explore') {
+      // if there is very little drag, then it is a click
+      const xdistance = Math.abs(this.cursor.start[0] - this.cursor.curr[0])
+      const ydistance = Math.abs(this.cursor.start[1] - this.cursor.curr[1])
+      if (xdistance < 20 && ydistance < 20) {
+        console.log(xdistance, ydistance)
+      }
+
     }
 
     this.debugText.content = `
@@ -499,8 +516,17 @@ export default class PaperApp {
 
     if (this.scene === 'explore') {
       if (this.cursor.drag) {
-        this.cities.position = [ev.x, this.cities.position.y]
-        console.log(this.cities)
+        // fix boundaries
+        this.cities.position = [
+          Math.max(
+            Math.min(
+              ev.x + this.xrel,
+              255,
+            ),
+            -155,
+          ),
+          this.cities.position.y
+        ]
       }
     }
 
