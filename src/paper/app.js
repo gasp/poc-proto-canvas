@@ -2,6 +2,12 @@ import paper, { Group, Layer, Point, PointText, Path, Raster, Rectangle, Size } 
 
 export default class PaperApp {
   constructor() {
+    this.cursor = {
+      drag: false,
+      start: [0,0],
+      curr: [100,100],
+    }
+
     this.init()
     this.draw()
   }
@@ -430,14 +436,42 @@ export default class PaperApp {
     debugText.content = 'mouse position'
     this.debugText = debugText
 
+    const debugLine = new Path.Line(
+      new Point(this.cursor.start),
+      new Point(this.cursor.curr),
+    )
+    debugLine.strokeColor = '#00f'
+    debugLine.strokeWidth = 0
+    debugLine.selected = true
+    this.debugLine = debugLine
+
     paper.view.draw()
   }
 
   enlapsed() {} // timeline
 
+  down(ev) {
+    this.cursor.drag = true
+    this.cursor.start = [ev.x, ev.y]
+    this.debugLine.segments[0].point = new Point(this.cursor.start)
+    this.debugLine.strokeWidth = 3
+  }
+
+  up(ev) {
+    this.cursor.drag = false
+    this.debugLine.strokeWidth = 0
+  }
+
+  move2(ev) {
+    if (this.cursor.drag) {
+      this.cursor.curr = [ev.x, ev.y]
+      this.debugLine.segments[1].point = new Point(this.cursor.curr)
+    }
+    // this.debugLine.segments[1].point = new Point(ev.x, ev.y)
+  }
 
   move({ x, y }) { // rename cursor
-    this.debugText.content = `x: ${x} y: ${y} | scroll ${this.homeLayer.position}`
+    this.debugText.content = `x: ${x} y: ${y} | scroll: ${this.homeLayer.position} | cursor: ${this.cursor.drag? 'down' : 'up'}`
 
     // how to scroll ?
     // this.homeLayer.position = new Point(x, y)
