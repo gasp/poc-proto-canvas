@@ -8,6 +8,8 @@ export default class PaperApp {
       curr: [100,100],
     }
 
+    this.scene = 'home'
+
     this.init()
     this.draw()
   }
@@ -15,6 +17,8 @@ export default class PaperApp {
   init() {
     this.canvas = document.createElement('canvas')
     this.canvas.id = 'paper-canvas'
+    this.canvas.width = 375
+    this.canvas.height = 812
     document.body.appendChild(this.canvas)
 
     paper.setup(this.canvas)
@@ -126,8 +130,7 @@ export default class PaperApp {
       ]
     })
 
-    // hiding it
-    homeLayer.visible = false
+    homeLayer.visible = this.scene === 'home'
     this.homeLayer = homeLayer
 
 
@@ -396,14 +399,14 @@ export default class PaperApp {
     ])
 
     popular.selected = true
-
+    this.cities = cities
 
     const exploreLayer = new Layer([
       burger,
       search,
       popular
     ])
-    exploreLayer.visible = true
+    exploreLayer.visible = this.scene === 'explore'
     this.exploreLayer = exploreLayer
 
 
@@ -430,9 +433,9 @@ export default class PaperApp {
     // nose.fillColor = 'red'
     // this.nose = nose
 
-    const debugText = new PointText(new Point(300, 10))
-    debugText.justification = 'center';
-    debugText.fillColor = 'black';
+    const debugText = new PointText(new Point(22, 10))
+    debugText.justification = 'left'
+    debugText.fillColor = 'black'
     debugText.content = 'mouse position'
     this.debugText = debugText
 
@@ -451,15 +454,35 @@ export default class PaperApp {
   enlapsed() {} // timeline
 
   down(ev) {
-    this.cursor.drag = true
-    this.cursor.start = [ev.x, ev.y]
-    this.debugLine.segments[0].point = new Point(this.cursor.start)
-    this.debugLine.strokeWidth = 3
+    if (this.scene === 'explore' && ev.y > 300 && ev.y < 450) {
+      this.cursor.drag = true
+      this.cursor.start = [ev.x, ev.y]
+      this.debugLine.segments[0].point = new Point(this.cursor.start)
+      this.debugLine.strokeWidth = 3
+    }
+
   }
 
   up(ev) {
     this.cursor.drag = false
     this.debugLine.strokeWidth = 0
+
+
+    // handle click in first scene
+    if (this.scene === 'home') {
+      // if (ev.y > 1 && ev.y < 650 ) {
+        console.log('clicked', ev.x, ev.y)
+        this.scene = 'explore'
+        this.homeLayer.visible = false
+        this.exploreLayer.visible = true
+      // }
+    }
+
+    this.debugText.content = `
+      x: ${this.cursor.curr[0]} y: ${this.cursor.curr[1]} |
+      scroll: ${this.cities.position} |
+      cursor: ${this.cursor.drag? 'down' : 'up'}
+    `
   }
 
   move2(ev) {
@@ -468,10 +491,23 @@ export default class PaperApp {
       this.debugLine.segments[1].point = new Point(this.cursor.curr)
     }
     // this.debugLine.segments[1].point = new Point(ev.x, ev.y)
+    this.debugText.content = `
+      x: ${ev.x} y: ${ev.y} |
+      scroll: ${this.cities.position} |
+      cursor: ${this.cursor.drag? 'down' : 'up'}
+    `
+
+    if (this.scene === 'explore') {
+      if (this.cursor.drag) {
+        this.cities.position = [ev.x, this.cities.position.y]
+        console.log(this.cities)
+      }
+    }
+
   }
 
   move({ x, y }) { // rename cursor
-    this.debugText.content = `x: ${x} y: ${y} | scroll: ${this.homeLayer.position} | cursor: ${this.cursor.drag? 'down' : 'up'}`
+
 
     // how to scroll ?
     // this.homeLayer.position = new Point(x, y)

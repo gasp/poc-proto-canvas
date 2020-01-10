@@ -1,8 +1,8 @@
 export default {
   board: {
     dimensions: {
-      x: 800,
-      y: 600,
+      x: 375,
+      y: 812,
     },
   },
 }
