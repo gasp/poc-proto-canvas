@@ -1,6 +1,6 @@
 import paper, { Group, Layer, Point, PointText, Path, Raster, Rectangle, Size } from 'paper'
 
-const Home = that  => {
+const home = that  => {
   console.log(that)
   const radius = new Size(6, 6);
 
@@ -97,5 +97,4 @@ const Home = that  => {
   })
 }
 
-
-export default Home
+export default home

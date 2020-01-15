@@ -1,12 +1,14 @@
+import paper, { Group, Layer, Point, PointText, Path, Raster, Rectangle, Size } from 'paper'
 import PaperApp from './app.js'
-import Home from './scenes/home.js'
+import Scenes from './scenes/index.js'
+
 
 class PaperScene extends PaperApp {
   constructor() {
     super()
     this.scenes =  [
       'home',
-
+      'explore',
     ]
     this.idx = 0
     this.drawScene()
@@ -23,24 +25,20 @@ class PaperScene extends PaperApp {
   }
 
   drawScene() { // rename to draw :-)
-    switch (this.scenes[this.idx]) {
-      case 'home':
-        Home(this)
-        break;
-      default:
-
-    }
+    const scene = this.scenes[this.idx]
+    console.log(`drawing ${scene}`)
+    Scenes[scene](this)
   }
 
 
   down(ev) {
-    if (this.getScene() === 'explore' && ev.y > 300 && ev.y < 570) {
+    if (false && this.getScene() === 'explore' && ev.y > 300 && ev.y < 570) {
       this.cursor.drag = true
       this.cursor.start = [ev.x, ev.y]
       this.cursor.curr = [ev.x, ev.y]
       this.debugLine.segments[0].point = new Point(this.cursor.start)
       this.debugLine.strokeWidth = 3
-      console.log('cp', this.cities.position.x, ev.x, this.cities.position.x - ev.x)
+      // console.log('cp', this.cities.position.x, ev.x, this.cities.position.x - ev.x)
       this.xrel = this.cities.position.x - ev.x
     }
 
@@ -56,6 +54,7 @@ class PaperScene extends PaperApp {
       // if (ev.y > 1 && ev.y < 650 ) {
         console.log('clicked', ev.x, ev.y)
         this.setScene('explore')
+        this.drawScene()
       // }
     }
 
@@ -71,7 +70,7 @@ class PaperScene extends PaperApp {
 
     this.debugText.content = `
       x: ${this.cursor.curr[0]} y: ${this.cursor.curr[1]} |
-      scroll: ${this.cities.position} |
+      scroll: ${/*this.cities.position*/ true} |
       cursor: ${this.cursor.drag? 'down' : 'up'}
     `
   }
@@ -86,7 +85,7 @@ class PaperScene extends PaperApp {
     // this.debugLine.segments[1].point = new Point(ev.x, ev.y)
     this.debugText.content = `
       x: ${ev.x} y: ${ev.y} |
-      scroll: ${this.cities.position} |
+      scroll: ${/*this.cities.position*/true} |
       cursor: ${this.cursor.drag? 'down' : 'up'}
     `
 
