@@ -1,10 +1,11 @@
-import PaperApp from './paper/app.js'
+import PaperScene from './paper/scene.js'
 import config from './config.js'
 
-const app = new PaperApp()
+const app = new PaperScene()
 
 window.addEventListener('load', () => {
   setTimeout(() => {
+    app.drawScene('home')
     const $canvas = document.querySelector('canvas')
     console.log($canvas)
     $canvas.addEventListener('mousemove', (ev) => {

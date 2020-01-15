@@ -1,4 +1,6 @@
 import paper, { Group, Layer, Point, PointText, Path, Raster, Rectangle, Size } from 'paper'
+// import { TweenMax } from "gsap/TweenMax";
+
 
 export default class PaperApp {
   constructor() {
@@ -41,107 +43,14 @@ export default class PaperApp {
     }
     const radius = new Size(6, 6);
 
-    // home
-    const ldot = new Path.Circle(new Point(80, 212), 11)
-    ldot.fillColor = '#6328E9'
-    ldot.selected = true
 
-    const larc = new Path.Circle(new Point(100, 192), 23)
-    larc.closed = false
-    larc.strokeColor = '#6328E9'
-    larc.strokeWidth = 17
-    larc.selected = true
-    // larc.rotate(90)
-
-    const logoName = new PointText([140, 220])
-    logoName.content = 'Bridger';
-    logoName.style = {
-      fontFamily: 'CircularStd',
-      fontWeight: 800,
-      fontSize: 48,
-      fillColor: 'red',
-      justification: 'left',
-    }
-    logoName.scale(.97, 1)
-    logoName.selected = true
-
-    const tagLine = new PointText([187.5, 260])
-    tagLine.content = 'Get ready for your first trip';
-    tagLine.style = {
-      fontFamily: 'CircularStd',
-      fontWeight: 400,
-      fontSize: 20,
-      fillColor: 'red',
-      justification: 'center',
-    }
-    tagLine.selected = true
-
-    const signupRect = new Rectangle(new Point(22, 512), new Point(22 + 331, 512 + 60));
-    const signupButton = new Path.Rectangle(signupRect, radius);
-    signupButton.fillColor = '#6328E9';
-    signupButton.selected = true
-
-    const signupText = new PointText([187.5, 549])
-    signupText.content = 'Sign Up to Bridger';
-    signupText.style = {
-      fontFamily: 'CircularStd',
-      fontWeight: 400,
-      fontSize: 17,
-      fillColor: 'red',
-      justification: 'center',
-    }
-    signupText.selected = true
-
-    const loginRect = new Rectangle(new Point(22, 588), new Point(22 + 331, 588 + 60))
-    const loginButton = new Path.Rectangle(loginRect, radius)
-    loginButton.fillColor = '#E0D4FB'
-    loginButton.selected = true
-
-    const loginText = new PointText([187.5, 625])
-    loginText.content = 'Log In'
-    loginText.style = {
-      fontFamily: 'CircularStd',
-      fontWeight: 400,
-      fontSize: 17,
-      fillColor: 'red',
-      justification: 'center',
-    }
-    loginText.selected = true
-
-    const copyText = new PointText([187.5, 700])
-    copyText.content = 'This prototype belongs entirely to Maze.design'
-    copyText.style = {
-      fontFamily: 'CircularStd',
-      fontWeight: 400,
-      fontSize: 14,
-      fillColor: 'red',
-      justification: 'center',
-    }
-    copyText.selected = true
-
-
-    const homeLayer = new Layer({
-      children: [
-        ldot,
-        larc,
-        logoName,
-        tagLine,
-        signupButton,
-        signupText,
-        loginButton,
-        loginText,
-        copyText,
-      ]
-    })
-
-    homeLayer.visible = this.scene === 'home'
-    this.homeLayer = homeLayer
 
 
     const loginLayer = new Layer()
 
     // explore
 
+    // this is a component
     const burger = new Group([
       new Path({segments: [[24, 45], [42, 45]]}),
       new Path({segments: [[24, 52], [42, 52]]}),
@@ -456,134 +365,4 @@ export default class PaperApp {
   }
 
   enlapsed() {} // timeline
-
-  down(ev) {
-    if (this.scene === 'explore' && ev.y > 300 && ev.y < 570) {
-      this.cursor.drag = true
-      this.cursor.start = [ev.x, ev.y]
-      this.cursor.curr = [ev.x, ev.y]
-      this.debugLine.segments[0].point = new Point(this.cursor.start)
-      this.debugLine.strokeWidth = 3
-      console.log('cp', this.cities.position.x, ev.x, this.cities.position.x - ev.x)
-      this.xrel = this.cities.position.x - ev.x
-    }
-
-  }
-
-  up(ev) {
-    this.cursor.drag = false
-    this.debugLine.strokeWidth = 0
-
-
-    // handle click in first scene
-    if (this.scene === 'home') {
-      // if (ev.y > 1 && ev.y < 650 ) {
-        console.log('clicked', ev.x, ev.y)
-        this.scene = 'explore'
-        this.homeLayer.visible = false
-        this.exploreLayer.visible = true
-      // }
-    }
-
-    if (this.scene === 'explore') {
-      // if there is very little drag, then it is a click
-      const xdistance = Math.abs(this.cursor.start[0] - this.cursor.curr[0])
-      const ydistance = Math.abs(this.cursor.start[1] - this.cursor.curr[1])
-      if (xdistance < 20 && ydistance < 20) {
-        console.log(xdistance, ydistance)
-      }
-
-    }
-
-    this.debugText.content = `
-      x: ${this.cursor.curr[0]} y: ${this.cursor.curr[1]} |
-      scroll: ${this.cities.position} |
-      cursor: ${this.cursor.drag? 'down' : 'up'}
-    `
-  }
-
-  move2(ev) {
-    if (this.cursor.drag) {
-      this.cursor.curr = [ev.x, ev.y]
-      this.debugLine.segments[1].point = new Point(this.cursor.curr)
-    }
-    // this.debugLine.segments[1].point = new Point(ev.x, ev.y)
-    this.debugText.content = `
-      x: ${ev.x} y: ${ev.y} |
-      scroll: ${this.cities.position} |
-      cursor: ${this.cursor.drag? 'down' : 'up'}
-    `
-
-    if (this.scene === 'explore') {
-      if (this.cursor.drag) {
-        // fix boundaries
-        this.cities.position = [
-          Math.max(
-            Math.min(
-              ev.x + this.xrel,
-              255,
-            ),
-            -155,
-          ),
-          this.cities.position.y
-        ]
-      }
-    }
-
-  }
-
-  move({ x, y }) { // rename cursor
-
-
-    // how to scroll ?
-    // this.homeLayer.position = new Point(x, y)
-
-    // this.tail.segments[0].point = new Point(x, y)
-    //
-    // for (let i = 0; i < this.conf.nbsegments - 1; i++) {
-    //   const segment = this.tail.segments[i]
-    //   const nextSegment = this.tail.segments[i + 1]
-    //
-    //   const vector = new paper.Point(
-    //     segment.point.x - nextSegment.point.x,
-    //     segment.point.y - nextSegment.point.y,
-    //   )
-    //
-    //   vector.length = this.conf.distance // 50
-    //
-    //   nextSegment.point.x = segment.point.x - vector.x
-    //   nextSegment.point.y = segment.point.y - vector.y
-    // }
-    //
-    // const headVector = new paper.Point(
-    //   this.tail.segments[0].point.x - this.tail.segments[1].point.x,
-    //   this.tail.segments[0].point.y - this.tail.segments[1].point.y,
-    // )
-    //
-    // this.head.segments[0].point = new Point(x + headVector.x, y + headVector.y)
-    //
-    // this.head.segments[1].point = new Point(
-    //   x +
-    //     (headVector > 0
-    //       ? Math.sin(headVector.angleInRadians) * 30
-    //       : Math.sin(headVector.angleInRadians) * -30),
-    //   y +
-    //     (headVector > 0
-    //       ? Math.cos(headVector.angleInRadians) * -30
-    //       : Math.cos(headVector.angleInRadians) * 30),
-    // )
-    //
-    // this.head.segments[2].point = new Point(
-    //   x +
-    //     (headVector > 0
-    //       ? Math.sin(headVector.angleInRadians) * -30
-    //       : Math.sin(headVector.angleInRadians) * 30),
-    //   y +
-    //     (headVector > 0
-    //       ? Math.cos(headVector.angleInRadians) * 30
-    //       : Math.cos(headVector.angleInRadians) * -30),
-    // )
-
-    // this.tail.smooth('continuous')
-  }
 }
