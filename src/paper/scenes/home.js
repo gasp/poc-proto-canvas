@@ -95,6 +95,8 @@ const home = that  => {
       copyText,
     ]
   })
+
+  return homeLayer
 }
 
 export default home

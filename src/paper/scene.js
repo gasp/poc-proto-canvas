@@ -6,11 +6,11 @@ import Scenes from './scenes/index.js'
 class PaperScene extends PaperApp {
   constructor() {
     super()
-    this.scenes =  [
-      'home',
-      'explore',
-    ]
+    this.scenes =  Object.keys(Scenes) // TODO: remove this useless array
+    this.scenesLayers = {}
     this.idx = 0
+
+    this.populate()
     this.drawScene()
   }
 
@@ -24,12 +24,18 @@ class PaperScene extends PaperApp {
     return this.scenes[this.idx]
   }
 
-  drawScene() { // rename to draw :-)
-    const scene = this.scenes[this.idx]
-    console.log(`drawing ${scene}`)
-    Scenes[scene](this)
+  populate() {
+    this.scenes.forEach(sc => {
+      this.scenesLayers[sc] = Scenes[sc](this)
+    })
   }
 
+  drawScene() { // rename to draw :-)
+    this.scenes.forEach((sc, i) => {
+      console.log(sc, this.scenesLayers[sc])
+      this.scenesLayers[sc].visible = i === this.idx
+    })
+  }
 
   down(ev) {
     if (false && this.getScene() === 'explore' && ev.y > 300 && ev.y < 570) {
@@ -41,14 +47,11 @@ class PaperScene extends PaperApp {
       // console.log('cp', this.cities.position.x, ev.x, this.cities.position.x - ev.x)
       this.xrel = this.cities.position.x - ev.x
     }
-
   }
 
   up(ev) {
     this.cursor.drag = false
     this.debugLine.strokeWidth = 0
-
-
     // handle click in first scene
     if (this.getScene() === 'home') {
       // if (ev.y > 1 && ev.y < 650 ) {
