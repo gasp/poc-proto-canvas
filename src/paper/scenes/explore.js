@@ -282,9 +282,45 @@ const explore = that  => ({
     return exploreLayer
 },
   interactions: {
-    down: (ev) => {console.log({interaction: 'down', ev})},
-    move: (ev) => {console.log({interaction: 'move', ev})},
-    up: (ev) => {console.log({interaction: 'up', ev})},
+    down: (ev, that) => {
+      console.log({interaction: 'down', ev})
+      if (ev.y > 300 && ev.y < 570) {
+        that.debugLine.segments[0].point = new Point(that.cursor.start)
+        that.debugLine.strokeWidth = 3
+        // console.log('cp', that.cities.position.x, ev.x, that.cities.position.x - ev.x)
+        that.xrel = that.cities.position.x - ev.x
+      }
+    },
+    move: (ev, that) => {
+      if (that.cursor.drag) {
+        that.debugLine.segments[1].point = new Point(that.cursor.curr)
+        // fix boundaries
+        that.cities.position = [
+          Math.max(
+            Math.min(
+              ev.x + that.xrel,
+              255,
+            ),
+            -155,
+          ),
+          that.cities.position.y
+        ]
+      }
+
+    },
+    up: (ev, that) => {
+      console.log({interaction: 'up', ev})
+
+      that.debugLine.strokeWidth = 0
+
+      // if there is very little drag, then it is a click
+      const xdistance = Math.abs(that.cursor.start[0] - that.cursor.curr[0])
+      const ydistance = Math.abs(that.cursor.start[1] - that.cursor.curr[1])
+      if (xdistance < 20 && ydistance < 20) {
+        console.log('go to appartments list')
+      }
+
+    },
   },
 })
 

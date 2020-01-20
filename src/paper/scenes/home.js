@@ -103,7 +103,6 @@ const home = that  => ({
     down: (ev) => {console.log({interaction: 'down', ev})},
     move: (ev) => {console.log({interaction: 'move', ev})},
     up: (ev) => {
-      console.log('home')
       console.log({interaction: 'up', ev})
       if (ev.y > 500 && ev.y < 650 ) {
         console.log('clicked', ev.x, ev.y)
