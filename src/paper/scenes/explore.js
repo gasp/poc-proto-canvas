@@ -170,7 +170,6 @@ const explore = that  => ({
     lonThumb.scale(.25)
     lonThumb.position = new Point(255, 408)
 
-
     const berThumb = new Raster('/assets/berlin.png')
     berThumb.scale(.20)
     berThumb.position = new Point(415, 370)
@@ -237,7 +236,6 @@ const explore = that  => ({
         berThumb,
         city(new Point(340, 450), 'Berlin, DE', '1,500', 3, '$'),
       ])
-
     ])
 
     const popular = new Layer([
@@ -269,13 +267,73 @@ const explore = that  => ({
       cities,
     ])
 
+    const orlThumb = new Raster('/assets/orleans.png')
+    orlThumb.scale(.25)
+    orlThumb.position = new Point(95, 710)
+
+    const angThumb = new Raster('/assets/angers.png')
+    angThumb.scale(.25)
+    angThumb.position = new Point(255, 710)
+
+    const nicThumb = new Raster('/assets/nice.png')
+    nicThumb.scale(.25)
+    nicThumb.position = new Point(415, 700)
+
+    const localCities = new Group([
+      // orléans
+      new Group([
+        orlThumb,
+        city(new Point(27, 805), 'Orléans', '800', 4, '$'),
+      ]),
+      // angers
+      new Group([
+        angThumb,
+        city(new Point(180, 820), 'Angers', '1,000', 5, '$ $'),
+
+      ]),
+      // nice
+      new Group([
+        nicThumb,
+        city(new Point(340, 805), 'Nice', '500', 3, '$ $ $'),
+      ])
+    ])
+
+    const local = new Layer([
+      (() => {
+        const title = new PointText([22, 600])
+        title.content = 'In my country'
+        title.style = {
+          fontFamily: 'Sailec, arial',
+          fontWeight: 400,
+          fontSize: 16,
+          fillColor: 'red',
+          justification: 'left',
+        }
+        return title
+      })(),
+      (() => {
+        const exp = new PointText([354, 600])
+        exp.content = 'Explore'
+        exp.style = {
+          fontFamily: 'Sailec, arial',
+          fontWeight: 400,
+          fontSize: 16,
+          fillColor: '#6328E9',
+          justification: 'right',
+        }
+        return exp
+      })(),
+      localCities,
+    ])
+
     popular.selected = true
     that.cities = cities
 
     const exploreLayer = new Layer([
       burger,
       search,
-      popular
+      popular,
+      local,
     ])
 
     that.exploreLayer = exploreLayer

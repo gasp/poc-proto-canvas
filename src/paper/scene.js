@@ -10,7 +10,7 @@ class PaperScene extends PaperApp {
     this.scenes =  Object.keys(Scenes) // TODO: remove this useless array
     this.scenesLayers = {}
     this.scenesInteractions = {}
-    this.idx = 0
+    this.idx = 1 // force scene 1
 
     this.populate()
     this.drawScene()
@@ -51,7 +51,7 @@ class PaperScene extends PaperApp {
   }
 
   down(ev) {
-    this.cursor.drag = true
+    this.cursor.drag = true // this may problematic on drag start outside a draggable zone
     this.cursor.start = [ev.x, ev.y]
     this.cursor.curr = [ev.x, ev.y]
     this.pipeInteraction('down', ev, this)
