@@ -13,6 +13,7 @@ const Background = () => {
   topPolygon.add(new Point(left, bottom));
   topPolygon.add(new Point(right, 300));
   topPolygon.add(new Point(right, -6));
+  topPolygon.strokeColor = '#fff'
   topPolygon.fillColor = {
     gradient: {
       stops: [
@@ -76,7 +77,7 @@ const Background = () => {
 
 
   const background = new Layer([topPolygon])
-  background.selected = true
+  background.selected = false
   background.visible = true
   return background
 }

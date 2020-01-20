@@ -25,7 +25,7 @@ const explore = that  => ({
           fontFamily: 'CircularStd',
           fontWeight: 400,
           fontSize: 16,
-          fillColor: 'red',
+          fillColor: '#7f7f7f',
           justification: 'left',
         }
         exploreText.content = 'Explore appartments in'

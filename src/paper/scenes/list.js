@@ -5,7 +5,7 @@ import Burger from '../components/burger.js'
 const list = that  => ({
   layer: () => {
     // this is a component
-    const radius = new Size(6, 6);
+    const radius = new Size(6, 6)
 
     const burger = Burger()
     // // this is a component
@@ -25,10 +25,10 @@ const list = that  => ({
           fontFamily: 'CircularStd',
           fontWeight: 400,
           fontSize: 16,
-          fillColor: 'red',
+          fillColor: '#7f7f7f',
           justification: 'left',
         }
-        exploreText.content = 'Explore appartments in'
+        exploreText.content = 'Best appartments in'
         return exploreText
       })(),
       (() => {
@@ -175,8 +175,8 @@ const list = that  => ({
         ),
       ),
     ])
-    search.selected = true
-
+    search.selected = false
+    that.search = search
 
     const satisLine = (x, y, note = 5) => {
       const dots = []
@@ -187,9 +187,6 @@ const list = that  => ({
       }
       return new Group(dots)
     }
-
-
-
 
     const annaThumb = new Raster('/assets/list_anna.png')
     annaThumb.scale(.25)
@@ -259,7 +256,7 @@ const list = that  => ({
     ])
 
     that.vScroll = vScroll
-    vScroll.selected = true
+    vScroll.selected = false
 
 
     const listLayer = new Layer([
@@ -281,18 +278,35 @@ const list = that  => ({
     },
     move: (ev, that) => {
       if (that.cursor.drag) {
+        const ypos = Math.max(
+          Math.min(
+            650,
+            ev.y + that.yrel,
+          ),
+          450,
+        )
+        that.vScrollRatio = 1 - (ypos - 450) / (650 - 450)
+        console.log({ypos, vScrollRatio: that.vScrollRatio})
+        //
         that.debugLine.segments[1].point = new Point(that.cursor.curr)
         // fix boundaries
         that.vScroll.position = [
           that.vScroll.position.x,
-          Math.max(
-            Math.min(
-              650,
-              ev.y + that.yrel,
-            ),
-            450,
-          ),
+          ypos,
         ]
+
+        // interact with search
+        that.search.children[0].position.y = 122 - 50 * that.vScrollRatio
+        that.search.children[0].opacity = 1 - that.vScrollRatio
+
+        that.search.children[1].position.y = 160 - 50 * that.vScrollRatio
+        that.search.children[1].opacity = 1 - that.vScrollRatio
+
+        that.search.children[2].opacity = 1 - Math.min(1, Math.max(0, 2 * that.vScrollRatio))
+        that.search.children[3].opacity = 1 - Math.min(1, Math.max(0, 2 * that.vScrollRatio))
+        that.search.children[4].opacity = 1 - Math.min(1, Math.max(0, 2 * that.vScrollRatio))
+
+
       }
 
     },
