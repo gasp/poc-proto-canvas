@@ -10,10 +10,15 @@ class PaperScene extends PaperApp {
     this.scenes =  Object.keys(Scenes) // TODO: remove this useless array
     this.scenesLayers = {}
     this.scenesInteractions = {}
-    this.idx = 2 // force scene 2 (list)
+    this.idx = 0 // force scene 2 (list)
 
     this.populate()
     this.drawScene()
+
+  }
+
+  setCallback(cb) {
+    this.callback = cb
   }
 
   setScene(name) {
@@ -27,14 +32,12 @@ class PaperScene extends PaperApp {
   }
 
   populate() {
+    Background()
     this.scenes.forEach(sc => {
       const scene = Scenes[sc](this)
       this.scenesLayers[sc] = scene.layer()
       this.scenesInteractions[sc] = scene.interactions
     })
-
-    Background()
-
   }
 
   drawScene() { // rename to draw :-)

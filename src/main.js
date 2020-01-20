@@ -1,11 +1,19 @@
 import PaperScene from './paper/scene.js'
+import Ui from './ui.js'
+
 import config from './config.js'
+
 
 const app = new PaperScene()
 
 window.addEventListener('load', () => {
+
   setTimeout(() => {
+    const ui = new Ui()
     app.drawScene('home')
+    app.setCallback(() => {
+      ui.displayThankYou()
+    })
     const $canvas = document.querySelector('canvas')
     console.log($canvas)
     $canvas.addEventListener('mousemove', (ev) => {

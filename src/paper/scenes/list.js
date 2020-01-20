@@ -319,7 +319,7 @@ const list = that  => ({
       const xdistance = Math.abs(that.cursor.start[0] - that.cursor.curr[0])
       const ydistance = Math.abs(that.cursor.start[1] - that.cursor.curr[1])
       if (xdistance < 20 && ydistance < 20) {
-        console.log('go to appartments list')
+        that.callback()
       }
 
     },

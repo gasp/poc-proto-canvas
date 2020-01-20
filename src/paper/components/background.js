@@ -3,6 +3,16 @@ import paper, { Group, Layer, Path, Point } from 'paper'
 
 const Background = () => {
 
+  const whiteRectangle = new Path.Rectangle({
+    point: [0, 0],
+    size: [375, 812],
+    strokeColor: '#ccc',
+    fillColor: '#fff',
+    selected: true
+  })
+  whiteRectangle.sendToBack();
+
+
   // this should be animated
   const left = -100
   const right = 250 // go to 350
@@ -76,7 +86,10 @@ const Background = () => {
 
 
 
-  const background = new Layer([topPolygon])
+  const background = new Layer([
+    whiteRectangle,
+    topPolygon,
+  ])
   background.selected = false
   background.visible = true
   return background
