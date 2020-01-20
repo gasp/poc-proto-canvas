@@ -2,7 +2,7 @@ import paper, { Group, Layer, Point, PointText, Path, Raster, Rectangle, Size } 
 
 import Burger from '../components/burger.js'
 
-const explore = that  => ({
+const list = that  => ({
   layer: () => {
     // this is a component
     const radius = new Size(6, 6);
@@ -39,9 +39,9 @@ const explore = that  => ({
           fontSize: 32,
           fillColor: 'red',
           justification: 'left',
-          opacity: .1
+          opacity: 1
         }
-        placeHolderText.content = 'Madrid, ES'
+        placeHolderText.content = 'London, UK'
         return placeHolderText
       })(),
       // magnifying glass
@@ -147,6 +147,32 @@ const explore = that  => ({
             return tex
           })(),
         ),
+        // city center
+        new Group(
+          (() => {
+            const rect = new Rectangle(
+              new Point(290, 204),
+              new Point(290 + 90, 204 + 30)
+            )
+            const fil = new Path.Rectangle(rect, radius)
+            fil.fillColor = '#efeafd'
+            return fil
+          })(),
+          (() => {
+            const pad = 20
+            const tex = new PointText(new Point(300 + 40, 204 + pad))
+            tex.style = {
+              fontFamily: 'Sailec, arial',
+              fontWeight: 400,
+              fontSize: 16,
+              fillColor: '#6328E9',
+              justification: 'center',
+              opacity: .1
+            }
+            tex.content = 'City Center'
+            return tex
+          })(),
+        ),
       ),
     ])
     search.selected = true
@@ -162,19 +188,18 @@ const explore = that  => ({
       return new Group(dots)
     }
 
-    const madThumb = new Raster('/assets/madrid.png')
-    madThumb.scale(.25)
-    madThumb.position = new Point(95, 390)
 
-    const lonThumb = new Raster('/assets/london.png')
-    lonThumb.scale(.25)
-    lonThumb.position = new Point(255, 408)
 
-    const berThumb = new Raster('/assets/berlin.png')
-    berThumb.scale(.20)
-    berThumb.position = new Point(415, 370)
 
-    const city = (p, title, appts, rank, price) => {
+    const annaThumb = new Raster('/assets/list_anna.png')
+    annaThumb.scale(.25)
+    annaThumb.position = new Point(190, 390)
+
+    const condoThumb = new Raster('/assets/list_condo.png')
+    condoThumb.scale(.25)
+    condoThumb.position = new Point(190, 720)
+
+    const appartment = (p, title, addr, rank, price) => {
       return new Group([
         // title
         (() => {
@@ -182,16 +207,16 @@ const explore = that  => ({
           tit.style = {
             fontFamily: 'CircularStd',
             fontWeight: 600,
-            fontSize: 18,
+            fontSize: 20,
             fillColor: 'red',
             justification: 'left',
           }
           tit.content = title
           return tit
         })(),
-        // appts
+        // address
         (() => {
-          const app = new PointText([p.x, p.y + 20])
+          const app = new PointText([p.x, p.y + 50])
           app.style = {
             fontFamily: 'CircularStd',
             fontWeight: 400,
@@ -199,168 +224,74 @@ const explore = that  => ({
             fillColor: '#999',
             justification: 'left',
           }
-          app.content = `${appts}+ Appartments`
+          app.content = addr
           return app
         })(),
         // price
         (() => {
-          const pri = new PointText([p.x + 65, p.y + 40])
+          const pri = new PointText([p.x, p.y + 90])
           pri.style = {
             fontFamily: 'CircularStd',
             fontWeight: 400,
-            fontSize: 12,
-            fillColor: '#999',
+            fontSize: 20,
+            fillColor: '#000',
             justification: 'left',
           }
-          pri.content = price
+          pri.content = `£ ${price}.00 / day`
           return pri
         })(),
-        satisLine(p.x, p.y+38, rank),
+        satisLine(p.x + 270, p.y + 85, rank),
       ])
     }
 
-    const cities = new Group([
-      // madrid
+    const appartments = new Group([
+      // anna
       new Group([
-        madThumb,
-        city(new Point(27, 500), 'Madrid, ES', '2,000', 4, '$ $'),
+        annaThumb,
+        appartment(new Point(27, 510), 'Anna\'s cozy appartment in \nLondon City Center', '107 Guild Street', 4, '84'),
+        condoThumb,
+        appartment(new Point(27, 840), 'Superb condo on Crown Street\nwith garden', '129 Crown Street', 3, '96'),
       ]),
-      // london
-      new Group([
-        lonThumb,
-        city(new Point(180, 530), 'London, UK', '3,000', 5, '$ $ $'),
-
-      ]),
-      // berlin
-      new Group([
-        berThumb,
-        city(new Point(340, 450), 'Berlin, DE', '1,500', 3, '$'),
-      ])
     ])
 
-    const popular = new Layer([
-      (() => {
-        const title = new PointText([22, 290])
-        title.content = 'Popular places'
-        title.style = {
-          fontFamily: 'Sailec, arial',
-          fontWeight: 400,
-          fontSize: 16,
-          fillColor: 'red',
-          justification: 'left',
-        }
-        return title
-      })(),
-      (() => {
-        const exp = new PointText([354, 290])
-        exp.content = 'Explore'
-        exp.style = {
-          fontFamily: 'Sailec, arial',
-          fontWeight: 400,
-          fontSize: 16,
-          fillColor: '#6328E9',
-          justification: 'right',
-        }
-        return exp
-      })(),
-      // this slider might be independant... wait and see
-      cities,
+    const vScroll = new Layer([
+      appartments,
     ])
 
-    const orlThumb = new Raster('/assets/orleans.png')
-    orlThumb.scale(.25)
-    orlThumb.position = new Point(95, 710)
+    that.vScroll = vScroll
+    vScroll.selected = true
 
-    const angThumb = new Raster('/assets/angers.png')
-    angThumb.scale(.25)
-    angThumb.position = new Point(255, 710)
 
-    const nicThumb = new Raster('/assets/nice.png')
-    nicThumb.scale(.25)
-    nicThumb.position = new Point(415, 700)
-
-    const localCities = new Group([
-      // orléans
-      new Group([
-        orlThumb,
-        city(new Point(27, 805), 'Orléans', '800', 4, '$'),
-      ]),
-      // angers
-      new Group([
-        angThumb,
-        city(new Point(180, 820), 'Angers', '1,000', 5, '$ $'),
-
-      ]),
-      // nice
-      new Group([
-        nicThumb,
-        city(new Point(340, 805), 'Nice', '500', 3, '$ $ $'),
-      ])
-    ])
-
-    const local = new Layer([
-      (() => {
-        const title = new PointText([22, 600])
-        title.content = 'In my country'
-        title.style = {
-          fontFamily: 'Sailec, arial',
-          fontWeight: 400,
-          fontSize: 16,
-          fillColor: 'red',
-          justification: 'left',
-        }
-        return title
-      })(),
-      (() => {
-        const exp = new PointText([354, 600])
-        exp.content = 'Explore'
-        exp.style = {
-          fontFamily: 'Sailec, arial',
-          fontWeight: 400,
-          fontSize: 16,
-          fillColor: '#6328E9',
-          justification: 'right',
-        }
-        return exp
-      })(),
-      localCities,
-    ])
-
-    that.cities = cities
-
-    const exploreLayer = new Layer([
+    const listLayer = new Layer([
       burger,
       search,
-      popular,
-      local,
+      vScroll
     ])
 
-    that.exploreLayer = exploreLayer
-    return exploreLayer
+    that.listLayer = listLayer
+    return listLayer
 },
   interactions: {
     down: (ev, that) => {
       console.log({interaction: 'down', ev})
-      if (ev.y > 300 && ev.y < 570) {
-        that.debugLine.segments[0].point = new Point(that.cursor.start)
-        that.debugLine.strokeWidth = 3
-        // console.log('cp', that.cities.position.x, ev.x, that.cities.position.x - ev.x)
-        that.xrel = that.cities.position.x - ev.x
-      }
+      that.debugLine.segments[0].point = new Point(that.cursor.start)
+      that.debugLine.strokeWidth = 3
+      // console.log('cp', that.cities.position.x, ev.x, that.cities.position.x - ev.x)
+      that.yrel = that.vScroll.position.y - ev.y
     },
     move: (ev, that) => {
       if (that.cursor.drag) {
         that.debugLine.segments[1].point = new Point(that.cursor.curr)
         // fix boundaries
-        that.cities.position = [
+        that.vScroll.position = [
+          that.vScroll.position.x,
           Math.max(
             Math.min(
-              ev.x + that.xrel,
-              255,
+              650,
+              ev.y + that.yrel,
             ),
-            -155,
+            450,
           ),
-          that.cities.position.y
         ]
       }
 
@@ -374,12 +305,11 @@ const explore = that  => ({
       const xdistance = Math.abs(that.cursor.start[0] - that.cursor.curr[0])
       const ydistance = Math.abs(that.cursor.start[1] - that.cursor.curr[1])
       if (xdistance < 20 && ydistance < 20) {
-        that.setScene('list')
-        that.drawScene()
+        console.log('go to appartments list')
       }
 
     },
   },
 })
 
-export default explore
+export default list

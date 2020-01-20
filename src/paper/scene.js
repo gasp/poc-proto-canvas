@@ -10,7 +10,7 @@ class PaperScene extends PaperApp {
     this.scenes =  Object.keys(Scenes) // TODO: remove this useless array
     this.scenesLayers = {}
     this.scenesInteractions = {}
-    this.idx = 1 // force scene 1
+    this.idx = 2 // force scene 2 (list)
 
     this.populate()
     this.drawScene()
