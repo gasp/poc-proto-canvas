@@ -2,6 +2,7 @@ import paper, { Group, Layer, Point, PointText, Path, Raster, Rectangle, Size } 
 import PaperApp from './app.js'
 import Scenes from './scenes/index.js'
 
+import Background from './components/background.js'
 
 class PaperScene extends PaperApp {
   constructor() {
@@ -32,41 +33,11 @@ class PaperScene extends PaperApp {
       this.scenesInteractions[sc] = scene.interactions
     })
 
-    // this should be animated
-    const right = 250 // go to 350
-    const bottom = 350 // go to 250 but with a sinusoidal way
-    const myPath = new Path();
-    myPath.strokeColor = 'black';
-    myPath.add(new Point(-65, -6));
-    myPath.add(new Point(-65, bottom));
-    myPath.add(new Point(right, 300));
-    myPath.add(new Point(right, -6));
-    myPath.fillColor = {
-      gradient: {
-        stops: [
-          'rgba(99, 41, 232, 1.0)', // '#328E9',
-          'rgba(233, 40, 40, 0.37)',
-        ],
-      },
-      origin: new Point(0, 0),
-      destination: new Point(300, 300),
-    }
-    myPath.opacity = .1
-
-    myPath.closed = true;
-
-
-    const l = new Layer([myPath])
-    l.selected = true
-    l.visible = true
-
-        // background: linear-gradient(173.15deg, #6328E9 12.12%, rgba(233, 40, 40, 0.37) 93.65%);
-        // opacity: 0.1;
+    Background()
 
   }
 
   drawScene() { // rename to draw :-)
-
 
     this.scenes.forEach((sc, i) => {
       console.log(sc, this.scenesLayers[sc])
