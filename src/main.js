@@ -9,8 +9,7 @@ window.addEventListener('load', () => {
     const $canvas = document.querySelector('canvas')
     console.log($canvas)
     $canvas.addEventListener('mousemove', (ev) => {
-      app.move2(ev)
-      app.move({x: ev.clientX, y: ev.clientY})
+      app.move(ev)
     })
     $canvas.addEventListener('mousedown', (ev) => {
       app.down(ev)

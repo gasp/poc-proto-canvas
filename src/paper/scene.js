@@ -8,6 +8,7 @@ class PaperScene extends PaperApp {
     super()
     this.scenes =  Object.keys(Scenes) // TODO: remove this useless array
     this.scenesLayers = {}
+    this.scenesInteractions = {}
     this.idx = 0
 
     this.populate()
@@ -26,15 +27,56 @@ class PaperScene extends PaperApp {
 
   populate() {
     this.scenes.forEach(sc => {
-      this.scenesLayers[sc] = Scenes[sc](this)
+      const scene = Scenes[sc](this)
+      this.scenesLayers[sc] = scene.layer()
+      this.scenesInteractions[sc] = scene.interactions
     })
+
+    // this should be animated
+    const right = 250 // go to 350
+    const bottom = 350 // go to 250 but with a sinusoidal way
+    const myPath = new Path();
+    myPath.strokeColor = 'black';
+    myPath.add(new Point(-65, -6));
+    myPath.add(new Point(-65, bottom));
+    myPath.add(new Point(right, 300));
+    myPath.add(new Point(right, -6));
+    myPath.fillColor = {
+      gradient: {
+        stops: [
+          'rgba(99, 41, 232, 1.0)', // '#328E9',
+          'rgba(233, 40, 40, 0.37)',
+        ],
+      },
+      origin: new Point(0, 0),
+      destination: new Point(300, 300),
+    }
+    myPath.opacity = .1
+
+    myPath.closed = true;
+
+
+    const l = new Layer([myPath])
+    l.selected = true
+    l.visible = true
+
+        // background: linear-gradient(173.15deg, #6328E9 12.12%, rgba(233, 40, 40, 0.37) 93.65%);
+        // opacity: 0.1;
+
   }
 
   drawScene() { // rename to draw :-)
+
+
     this.scenes.forEach((sc, i) => {
       console.log(sc, this.scenesLayers[sc])
       this.scenesLayers[sc].visible = i === this.idx
     })
+  }
+
+  pipeInteraction(type, ev) {
+    // patch this interaction to the scene interactions
+    return this.scenesInteractions[this.getScene()][type](ev)
   }
 
   down(ev) {
@@ -50,16 +92,9 @@ class PaperScene extends PaperApp {
   }
 
   up(ev) {
+    this.pipeInteraction('up', ev)
     this.cursor.drag = false
     this.debugLine.strokeWidth = 0
-    // handle click in first scene
-    if (this.getScene() === 'home') {
-      // if (ev.y > 1 && ev.y < 650 ) {
-        console.log('clicked', ev.x, ev.y)
-        this.setScene('explore')
-        this.drawScene()
-      // }
-    }
 
     if (this.getScene() === 'explore') {
       // if there is very little drag, then it is a click
@@ -68,7 +103,6 @@ class PaperScene extends PaperApp {
       if (xdistance < 20 && ydistance < 20) {
         console.log('go to appartments list')
       }
-
     }
 
     this.debugText.content = `
@@ -78,9 +112,7 @@ class PaperScene extends PaperApp {
     `
   }
 
-  // TODO: rename zat
-  move() {}
-  move2(ev) {
+  move(ev) {
     if (this.cursor.drag) {
       this.cursor.curr = [ev.x, ev.y]
       this.debugLine.segments[1].point = new Point(this.cursor.curr)
