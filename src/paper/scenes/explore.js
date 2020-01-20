@@ -37,9 +37,9 @@ const explore = that  => ({
           fontFamily: 'CircularStd',
           fontWeight: 600,
           fontSize: 32,
-          fillColor: 'red',
+          fillColor: '#ccc',
           justification: 'left',
-          opacity: .1
+          opacity: .1,
         }
         placeHolderText.content = 'Madrid, ES'
         return placeHolderText
@@ -149,8 +149,7 @@ const explore = that  => ({
         ),
       ),
     ])
-    search.selected = true
-
+    search.selected = false
 
     const satisLine = (x, y, note = 5) => {
       const dots = []
@@ -183,7 +182,7 @@ const explore = that  => ({
             fontFamily: 'CircularStd',
             fontWeight: 600,
             fontSize: 18,
-            fillColor: 'red',
+            fillColor: '#111',
             justification: 'left',
           }
           tit.content = title
@@ -246,7 +245,7 @@ const explore = that  => ({
           fontFamily: 'Sailec, arial',
           fontWeight: 400,
           fontSize: 16,
-          fillColor: 'red',
+          fillColor: '#111',
           justification: 'left',
         }
         return title
@@ -306,7 +305,7 @@ const explore = that  => ({
           fontFamily: 'Sailec, arial',
           fontWeight: 400,
           fontSize: 16,
-          fillColor: 'red',
+          fillColor: '#111',
           justification: 'left',
         }
         return title

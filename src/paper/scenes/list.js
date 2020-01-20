@@ -37,7 +37,7 @@ const list = that  => ({
           fontFamily: 'CircularStd',
           fontWeight: 600,
           fontSize: 32,
-          fillColor: 'red',
+          fillColor: '#111',
           justification: 'left',
           opacity: 1
         }
@@ -205,7 +205,7 @@ const list = that  => ({
             fontFamily: 'CircularStd',
             fontWeight: 600,
             fontSize: 20,
-            fillColor: 'red',
+            fillColor: '#111',
             justification: 'left',
           }
           tit.content = title
@@ -296,17 +296,20 @@ const list = that  => ({
         ]
 
         // interact with search
+        // best appts
         that.search.children[0].position.y = 122 - 50 * that.vScrollRatio
         that.search.children[0].opacity = 1 - that.vScrollRatio
 
+        // london, uk
         that.search.children[1].position.y = 160 - 50 * that.vScrollRatio
         that.search.children[1].opacity = 1 - that.vScrollRatio
 
+        // magnifying
         that.search.children[2].opacity = 1 - Math.min(1, Math.max(0, 2 * that.vScrollRatio))
-        that.search.children[3].opacity = 1 - Math.min(1, Math.max(0, 2 * that.vScrollRatio))
+        // line
+        that.search.children[3].opacity = .1 - Math.min(0.1, Math.max(0, 2 * that.vScrollRatio))
+        // filters
         that.search.children[4].opacity = 1 - Math.min(1, Math.max(0, 2 * that.vScrollRatio))
-
-
       }
 
     },

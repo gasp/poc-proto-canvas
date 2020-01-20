@@ -84,7 +84,7 @@ export default class PaperApp {
     )
     debugLine.strokeColor = '#00f'
     debugLine.strokeWidth = 0
-    debugLine.selected = true
+    // debugLine.selected = true
     this.debugLine = debugLine
 
     paper.view.draw()

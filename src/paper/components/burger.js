@@ -17,7 +17,7 @@ const Burger = () => {
     new Path({segments: [[24, 52], [42, 52]]}),
     new Path({segments: [[24, 59], [33, 59]]}),
   ])
-  burger.strokeColor = '#ff0000'
+  burger.strokeColor = '#555'
   burger.strokeWidth = 2
   burger.strokeCap = 'round'
 
